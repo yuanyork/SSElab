@@ -54,13 +54,14 @@ func (l *LinkTable) DeleteLinktableNode(lNode *LinkTableNode) bool {
 	}()
 	tmp := l.pHead
 	l.SumOfNode--
+	if lNode == l.pHead {
+		l.pHead = l.pHead.pNext
+		return true
+	}
 	for tmp.pNext != nil {
-		if lNode == l.pHead {
-			l.pHead = l.pHead.pNext
-			return true
-		}
+
 		if tmp.pNext == lNode {
-			if lNode == l.pTail && tmp.pNext == l.pTail {
+			if lNode == l.pTail {
 				l.pTail = tmp
 				l.pTail = nil
 				return true
