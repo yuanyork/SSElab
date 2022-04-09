@@ -25,6 +25,8 @@ type pDataNode *DataNode
 
 var pLinktbl *LinkTable
 
+var cmd string
+
 func InitMenuData() {
 	pNode := &DataNode{
 		cmd:     "help",
@@ -46,24 +48,13 @@ func InitMenuData() {
 	pLinktbl.AddLinktableNode((*LinkTableNode)(unsafe.Pointer(pNode)))
 }
 
-// var head []DataNode = []DataNode{
-// 	DataNode{"help", "this is help cmd!", help, nil},
-// 	DataNode{"version", "menu program v1.0", nil, nil},
-// 	DataNode{"quit", "Quit from menu", Quit, nil},
-// }
+func condition(lnode *LinkTableNode) bool {
+	p := (pDataNode)(unsafe.Pointer(lnode))
+	return strings.Compare(p.cmd, cmd) == 0
+}
 
 func FindCmd(cmd string) pDataNode {
-	p := (pDataNode)(unsafe.Pointer(pLinktbl.GetLinktableHead()))
-	if p == nil {
-		return nil
-	}
-	for p != nil {
-		if strings.Compare(p.cmd, cmd) == 0 {
-			return p
-		}
-		p = (pDataNode)(unsafe.Pointer(pLinktbl.GetNextLinktableNode((*LinkTableNode)(unsafe.Pointer(p)))))
-	}
-	return nil
+	return (pDataNode)(unsafe.Pointer(pLinktbl.SearchLinkeTableNode(condition)))
 }
 
 func main() {
@@ -76,7 +67,6 @@ func main() {
 	}
 	InitMenuData()
 	for {
-		var cmd string
 		for {
 			fmt.Print("Input a cmd name > ")
 			fmt.Scanf("%s", &cmd)

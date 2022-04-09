@@ -1,6 +1,8 @@
 package main
 
-import "sync"
+import (
+	"sync"
+)
 
 type LinkTableNode struct {
 	pNext *LinkTableNode
@@ -88,6 +90,21 @@ func (l *LinkTable) GetNextLinktableNode(pNode *LinkTableNode) *LinkTableNode {
 			return pTemp.pNext
 		}
 		pTemp = pTemp.pNext
+	}
+	return nil
+}
+
+func (l *LinkTable) SearchLinkeTableNode(condition func(*LinkTableNode) bool) *LinkTableNode {
+	var pNode *LinkTableNode
+	pNode = l.pHead
+	if pNode == nil || condition == nil {
+		return nil
+	}
+	for pNode != nil {
+		if condition(pNode) == true {
+			return pNode
+		}
+		pNode = pNode.pNext
 	}
 	return nil
 }
